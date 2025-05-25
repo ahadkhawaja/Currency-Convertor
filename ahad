@@ -1,0 +1,96 @@
+#include <iostream>
+#include <iomanip>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+double convertCurrency(double amount, const string& from, const string& to) {
+    const double USD_TO_EUR = 0.91;
+    const double USD_TO_GBP = 0.74;
+    const double EUR_TO_USD = 1.10;
+    const double EUR_TO_GBP = 0.81;
+    const double GBP_TO_USD = 1.35;
+    const double GBP_TO_EUR = 1.24;
+
+    const double USD_TO_PKR = 278.50;
+    const double EUR_TO_PKR = 305.20;
+    const double GBP_TO_PKR = 355.10;
+
+    const double PKR_TO_USD = 1.0 / USD_TO_PKR;
+    const double PKR_TO_EUR = 1.0 / EUR_TO_PKR;
+    const double PKR_TO_GBP = 1.0 / GBP_TO_PKR;
+
+    // USD Conversions
+    if (from == "USD" && to == "EUR") return amount * USD_TO_EUR;
+    if (from == "USD" && to == "GBP") return amount * USD_TO_GBP;
+    if (from == "USD" && to == "PKR") return amount * USD_TO_PKR;
+
+    // EUR Conversions
+    if (from == "EUR" && to == "USD") return amount * EUR_TO_USD;
+    if (from == "EUR" && to == "GBP") return amount * EUR_TO_GBP;
+    if (from == "EUR" && to == "PKR") return amount * EUR_TO_PKR;
+
+    // GBP Conversions
+    if (from == "GBP" && to == "USD") return amount * GBP_TO_USD;
+    if (from == "GBP" && to == "EUR") return amount * GBP_TO_EUR;
+    if (from == "GBP" && to == "PKR") return amount * GBP_TO_PKR;
+
+    // PKR Conversions
+    if (from == "PKR" && to == "USD") return amount * PKR_TO_USD;
+    if (from == "PKR" && to == "EUR") return amount * PKR_TO_EUR;
+    if (from == "PKR" && to == "GBP") return amount * PKR_TO_GBP;
+
+    // Same currency
+    if (from == to) return amount;
+
+    // Unsupported conversion
+    return -1.0;
+}
+
+string toUpper(const string& str) {
+    string upperStr = str;
+    transform(upperStr.begin(), upperStr.end(), upperStr.begin(), ::toupper);
+    return upperStr;
+}
+
+int main() {
+    string fromCurrency, toCurrency, choice;
+    double amount;
+
+    cout << "==============================" << endl;
+    cout << "       Currency Converter     " << endl;
+    cout << "==============================" << endl;
+
+    do {
+        cout << "\nSupported Currencies: USD, EUR, GBP, PKR" << endl;
+        cout << "Enter the source currency (e.g., USD): ";
+        cin >> fromCurrency;
+        fromCurrency = toUpper(fromCurrency);
+
+        cout << "Enter the target currency (e.g., EUR): ";
+        cin >> toCurrency;
+        toCurrency = toUpper(toCurrency);
+
+        cout << "Enter the amount to convert: ";
+        cin >> amount;
+
+        double convertedAmount = convertCurrency(amount, fromCurrency, toCurrency);
+
+        if (convertedAmount == -1.0) {
+            cout << "\nError: Unsupported currency conversion.\n" << endl;
+        } else {
+            cout << fixed << setprecision(2);
+            cout << "\n " << amount << " " << fromCurrency << " is equal to " << convertedAmount << " " << toCurrency << "." << endl;
+        }
+
+        cout << "\nWould you like to convert another amount? (yes/no): ";
+        cin >> choice;
+        choice = toUpper(choice);
+
+    } while (choice == "YES" || choice == "Y");
+
+    cout << "\nThank you for using the Currency Converter. Goodbye!" << endl;
+
+    return 0;
+}
